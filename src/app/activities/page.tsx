@@ -3,6 +3,7 @@ import { PageBanner } from '@/components/shared/PageBanner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 
 const programs = [
     {
@@ -101,12 +102,9 @@ export default function ActivitiesPage() {
                     </TabsList>
                     <TabsContent value="program" className="mt-12">
                         <div className="space-y-12">
-                            {programs.map((program) => (
-                                <Card key={program.name} className="overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 grid md:grid-cols-2 bg-white">
-                                    <div className="p-8 flex flex-col justify-center">
-                                        <h3 className="font-headline text-3xl font-bold text-primary text-justify mb-4">{program.name}</h3>
-                                        <p className="text-muted-foreground leading-relaxed text-justify">{program.description}</p>
-                                    </div>
+                            {programs.map((program, idx) => (
+                                <ScrollReveal key={program.name} delayMs={80 * idx}>
+                                  <Card className="overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 grid md:grid-cols-2 bg-white">
                                     <div className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 flex items-center justify-center">
                                         <Carousel className="w-full max-w-sm" opts={{loop: true}}>
                                             <CarouselContent>
@@ -120,14 +118,20 @@ export default function ActivitiesPage() {
                                             <CarouselNext className="absolute top-1/2 -translate-y-1/2 right-2 text-white bg-transparent hover:bg-transparent" />
                                         </Carousel>
                                     </div>
-                                </Card>
+                                    <div className="p-8 flex flex-col justify-center">
+                                        <h3 className="font-headline text-3xl font-bold text-primary text-justify mb-4">{program.name}</h3>
+                                        <p className="text-muted-foreground leading-relaxed text-justify">{program.description}</p>
+                                    </div>
+                                  </Card>
+                                </ScrollReveal>
                             ))}
                         </div>
                     </TabsContent>
                     <TabsContent value="category" className="mt-12">
                         <div className="space-y-12">
-                            {categories.map((category) => (
-                                <Card key={category.name} className="overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 grid md:grid-cols-2 bg-white">
+                            {categories.map((category, idx) => (
+                                <ScrollReveal key={category.name} delayMs={80 * idx}>
+                                  <Card className="overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 grid md:grid-cols-2 bg-white">
                                     <div className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 flex items-center justify-center md:order-last">
                                         <Carousel className="w-full max-w-sm" opts={{loop: true}}>
                                             <CarouselContent>
@@ -145,7 +149,8 @@ export default function ActivitiesPage() {
                                         <h3 className="font-headline text-3xl font-bold text-primary text-justify mb-4">{category.name}</h3>
                                         <p className="text-muted-foreground leading-relaxed text-justify">{category.description}</p>
                                     </div>
-                                </Card>
+                                  </Card>
+                                </ScrollReveal>
                             ))}
                         </div>
                     </TabsContent>

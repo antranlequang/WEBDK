@@ -19,8 +19,8 @@ import { Terminal } from 'lucide-react';
 const initialState: ApplicationFormState = null;
 
 const departments = [
-  "Tổ chức - Xây dựng",
-  "Tuyên truyền - Sự kiện",
+  "Tổ chức - Xây dựng Đoàn",
+  "Tuyên giáo - Sự kiện",
   "Truyền thông - Kỹ thuật",
   "Phong trào - Tình nguyện"
 ];

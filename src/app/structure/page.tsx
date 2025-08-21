@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 
 const departments = [
   {
@@ -58,31 +59,33 @@ export default function StructurePage() {
         <div className="max-w-4xl mx-auto">
           <Accordion type="single" collapsible className="w-full" defaultValue="item-0">
             {departments.map((dept, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-left hover:no-underline">
-                  <div className="flex flex-col">
-                    <h3 className="font-headline text-xl md:text-2xl font-semibold text-primary">{dept.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1 font-normal">{dept.shortDescription}</p>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pt-4">
-                  <p className="mb-6 text-muted-foreground">{dept.content}</p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {dept.images.map((image, imgIndex) => (
-                      <div key={imgIndex} className="overflow-hidden rounded-lg shadow-md">
-                        <Image
-                          src={image.src}
-                          alt={`${dept.name} image ${imgIndex + 1}`}
-                          width={400}
-                          height={300}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          data-ai-hint={image.hint}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
+              <ScrollReveal key={index} delayMs={60 * index}>
+                <AccordionItem value={`item-${index}`}>
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <div className="flex flex-col">
+                      <h3 className="font-headline text-xl md:text-2xl font-semibold text-primary">{dept.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1 font-normal">{dept.shortDescription}</p>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4">
+                    <p className="mb-6 text-muted-foreground">{dept.content}</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {dept.images.map((image, imgIndex) => (
+                        <div key={imgIndex} className="overflow-hidden rounded-lg shadow-md">
+                          <Image
+                            src={image.src}
+                            alt={`${dept.name} image ${imgIndex + 1}`}
+                            width={400}
+                            height={300}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            data-ai-hint={image.hint}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </ScrollReveal>
             ))}
           </Accordion>
         </div>

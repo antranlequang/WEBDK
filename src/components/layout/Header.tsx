@@ -29,7 +29,7 @@ export function Header() {
           href={item.href}
           onClick={() => setMobileMenuOpen(false)}
           className={cn(
-            "transition-colors hover:text-primary",
+            "transition-colors hover:text-primary link-underline",
             pathname === item.href ? "text-primary font-semibold" : "text-muted-foreground",
             "text-base"
           )}
@@ -43,7 +43,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 supports-[backdrop-filter]:bg-white/90">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 hover-glow">
           <img src="/images/logo.png" alt="ĐKTCNH Logo" className="h-8 w-auto" />
         </Link>
 

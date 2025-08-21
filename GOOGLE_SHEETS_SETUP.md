@@ -37,13 +37,22 @@
 
 ## Bước 5: Cấu hình Environment Variables
 
-Tạo file `.env.local` trong thư mục gốc của project:
+Tạo file `.env.local` trong thư mục gốc của project (chọn một phương thức cung cấp credentials):
 
 ```bash
 # Google Sheets API Configuration
 GOOGLE_SHEET_ID=your_google_sheet_id_here
 GOOGLE_SHEET_RANGE=Sheet1!A:I
 GOOGLE_SHEET_RANGE_CONTACT=Contact!A:D
+
+# Cách 1 (khuyến nghị prod): base64 toàn bộ JSON
+GOOGLE_SERVICE_ACCOUNT_JSON_BASE64=
+
+# Cách 2: ENV từng biến
+# GOOGLE_CLIENT_EMAIL=your-service-account@project.iam.gserviceaccount.com
+# GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+# Cách 3: File JSON local
 GOOGLE_SERVICE_ACCOUNT_KEY_FILE=./service-account-key.json
 ```
 
@@ -74,9 +83,10 @@ GOOGLE_SERVICE_ACCOUNT_KEY_FILE=./service-account-key.json
 
 ## Troubleshooting
 
-### Lỗi "Invalid private key"
-- Kiểm tra format của private key trong file JSON
-- Đảm bảo file JSON được tải đúng từ Google Cloud Console
+### Lỗi "Invalid private key" hoặc "invalid_grant: Invalid JWT Signature"
+- Private key trong ENV thiếu newline đúng chuẩn. Ưu tiên dùng `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`.
+- Nếu dùng `GOOGLE_PRIVATE_KEY`, thay newline bằng `\n` và đảm bảo có newline kết thúc.
+- Đảm bảo `client_email` và `private_key` thuộc cùng một service account.
 
 ### Lỗi "Permission denied"
 - Kiểm tra quyền của service account trong Google Sheet

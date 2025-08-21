@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { PageBanner } from '@/components/shared/PageBanner';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 
 export default function AchievementsPage() {
   const achievements = [
@@ -17,7 +18,7 @@ export default function AchievementsPage() {
       imageHint: 'certificate presentation',
     },
     {
-      title: 'Bằng khen Đoàn khoa Tài chính - Ngân hàng Đoàn Trường ĐH Kinh tế - Luật về Thực hiện tốt Chương trình hành động số 15-CT/TĐTN-BTG ngày 11/8/2016 của BCH Thành Đoàn về thực hiện Chỉ thị số 42-CT/TW của BBT TW Đảng về “Tăng cường sự lãnh đạo của Đảng đối với công tác giáo dục lý tưởng cách mạng, đạo đức, lối sống văn hóa cho thế hệ trẻ giai đoạn 2015 - 2030" của BTV Thành đoàn TP. HCM.',
+      title: 'Bằng khen Đoàn khoa Tài chính - Ngân hàng Đoàn Trường ĐH Kinh tế - Luật về Thực hiện tốt Chương trình hành động “Tăng cường sự lãnh đạo của Đảng đối với công tác giáo dục lý tưởng cách mạng, đạo đức, lối sống văn hóa cho thế hệ trẻ giai đoạn 2015 - 2030" của BTV Thành đoàn TP. HCM.',
       // description: 'Được trao giải cho các sáng kiến tình nguyện thành công và quan hệ đối tác bền chặt của chúng tôi với các doanh nghiệp địa phương.',
       imageUrl: 'https://placehold.co/400x300.png',
       imageHint: 'community volunteering',
@@ -35,26 +36,30 @@ export default function AchievementsPage() {
       />
 
       <main className="container mx-auto px-4 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 place-items-center">
           {achievements.map((achievement, index) => (
-            <Card key={index} className="overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col group">
-              <CardContent className="p-0">
-                <div className="aspect-w-4 aspect-h-3 overflow-hidden">
-                  <Image
-                    src={achievement.imageUrl}
-                    alt={achievement.title}
-                    width={400}
-                    height={300}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                    data-ai-hint={achievement.imageHint}
-                  />
+            <ScrollReveal key={index} delayMs={80 * index}>
+              <Card className="w-full max-w-4xl overflow-hidden shadow-lg hover:shadow-3xl transition-all duration-300 group mt-10">
+                <div className="flex flex-col md:flex-row">
+                  <CardContent className="p-0 md:w-1/2">
+                    <div className="aspect-w-4 aspect-h-3 overflow-hidden">
+                      <Image
+                        src={achievement.imageUrl}
+                        alt={achievement.title}
+                        width={400}
+                        height={300}
+                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                        data-ai-hint={achievement.imageHint}
+                      />
+                    </div>
+                  </CardContent>
+                  <CardFooter className="p-6 md:w-1/2 flex flex-col justify-center bg-background">
+                    <h3 className="font-headline text-lg font-semibold text-primary text-justify">{achievement.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground text-justify"></p>
+                  </CardFooter>
                 </div>
-              </CardContent>
-              <CardFooter className="p-6 flex-grow flex flex-col justify-start text-center bg-background">
-              <h3 className="font-headline text-lg font-semibold text-primary text-justify">{achievement.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground text-justify"></p>
-              </CardFooter>
-            </Card>
+              </Card>
+            </ScrollReveal>
           ))}
         </div>
       </main>

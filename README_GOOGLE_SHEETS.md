@@ -55,11 +55,22 @@ npm install --save-dev @types/google-apps-script
 3. Copy Sheet ID từ URL
 
 ### Bước 5: Cấu hình Environment Variables
-Tạo file `.env.local`:
+Tạo file `.env.local` (chọn MỘT trong các cách cung cấp credentials dưới đây):
 ```bash
+# Thông tin Google Sheet
 GOOGLE_SHEET_ID=your_google_sheet_id_here
 GOOGLE_SHEET_RANGE=Sheet1!A:I
 GOOGLE_SHEET_RANGE_CONTACT=Contact!A:D
+
+# Cách 1 (Khuyến nghị production): Base64 toàn bộ JSON credentials
+# Tạo chuỗi base64: base64 -i service-account-key.json | tr -d '\n'
+GOOGLE_SERVICE_ACCOUNT_JSON_BASE64=
+
+# Cách 2: ENV từng biến (cẩn thận xuống dòng private key)
+# GOOGLE_CLIENT_EMAIL=your-service-account@project.iam.gserviceaccount.com
+# GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+# Cách 3: Dùng file JSON local (phù hợp dev local)
 GOOGLE_SERVICE_ACCOUNT_KEY_FILE=./service-account-key.json
 ```
 
@@ -110,9 +121,12 @@ GOOGLE_SERVICE_ACCOUNT_KEY_FILE=./service-account-key.json
    - Kiểm tra file `.env.local`
    - Đảm bảo biến `GOOGLE_SHEET_ID` đã được set
 
-2. **"Invalid private key"**
-   - Kiểm tra file `service-account-key.json`
-   - Đảm bảo file được tải đúng từ Google Cloud Console
+2. **"Invalid private key" / "invalid_grant: Invalid JWT Signature"**
+   - Private key trong ENV thiếu xuống dòng chuẩn. Khắc phục:
+     - Ưu tiên dùng `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`, hoặc
+     - Với `GOOGLE_PRIVATE_KEY`, thay newline bằng `\n` và đảm bảo có newline cuối cùng
+   - Đảm bảo `client_email` khớp đúng với `private_key` (không trộn 2 service account)
+   - Nếu set ENV trên dashboard hosting, không bọc giá trị trong dấu nháy
 
 3. **"Permission denied"**
    - Kiểm tra quyền của service account trong Google Sheet

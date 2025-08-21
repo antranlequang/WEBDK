@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Quote } from 'lucide-react';
 import { CommentSection } from '@/components/blog/CommentSection';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 
 const testimonials = [
   {
@@ -61,14 +62,14 @@ const testimonials = [
     name: 'LÂM HỒNG MINH QUÂN',
     positions: ['Nguyên Phó Bí thư Đoàn Khoa Khóa 22', 'Nguyên Trưởng ban Truyền thông - Kỹ thuật Khóa 22'],
     avatar: 'https://placehold.co/100x100.png',
-    avatarHint: 'baotram',
+    avatarHint: 'minhquan',
     comment: 'Đang cập nhật...'
   },
   {
     name: 'TRẦN LÊ QUANG AN',
-    positions: ['Chủ nhiệm Chuyên san Tài chính và Công nghệ ứng dụng Khóa 22', 'Nguyên UV.BCH Đoàn Khoa Khóa 22', 'Bạch Nguyệt Quang Đoàn Khoa'],
+    positions: ['Chủ nhiệm Chuyên san Tài chính và Công nghệ ứng dụng Khóa 22', 'Nguyên UV.BCH Đoàn Khoa Khóa 22', 'Thành viên Ban Tổ chức - Xây dựng Đoàn Khóa 22'],
     avatar: 'https://placehold.co/100x100.png',
-    avatarHint: 'baotram',
+    avatarHint: 'quangan',
     comment: 'Đang cập nhật...'
   },
 ];
@@ -90,24 +91,26 @@ export default function BlogPage() {
             <h2 className="text-2xl md:text-4xl font-headline font-semibold mb-8 text-primary text-center">Đôi lời gửi gắm từ cựu thành viên</h2>
             <div className="space-y-8">
               {testimonials.map((testimonial, index) => (
-                <Card key={index} className="overflow-hidden shadow-lg">
-                  <CardContent className="p-6 flex flex-col md:flex-row gap-6 items-center">
-                    <Avatar className="h-24 w-24">
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.avatarHint} />
-                      <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="relative text-center md:text-left">
-                      <Quote className="absolute -top-2 left-0 h-8 w-8 text-primary/20 transform -translate-x-4" />
-                      <p className="font-bold font-headline text-lg text-primary">{testimonial.name}</p>
-                      <div className="mb-4 space-y-1">
-                        {(testimonial.positions ?? [testimonial.positions]).map((pos, i) => (
-                          <p key={i} className="text-sm font-semibold text-muted-foreground">{pos}</p>
-                        ))}
+                <ScrollReveal key={index} delayMs={60 * index}>
+                  <Card className="overflow-hidden shadow-lg">
+                    <CardContent className="p-6 flex flex-col md:flex-row gap-6 items-center">
+                      <Avatar className="h-24 w-24">
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.avatarHint} />
+                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="relative text-center md:text-left">
+                        <Quote className="absolute -top-2 left-0 h-8 w-8 text-primary/20 transform -translate-x-4" />
+                        <p className="font-bold font-headline text-lg text-primary">{testimonial.name}</p>
+                        <div className="mb-4 space-y-1">
+                          {(testimonial.positions ?? [testimonial.positions]).map((pos, i) => (
+                            <p key={i} className="text-sm font-semibold text-muted-foreground">{pos}</p>
+                          ))}
+                        </div>
+                        <blockquote className="text-muted-foreground italic text-justify">{testimonial.comment}</blockquote>
                       </div>
-                      <blockquote className="text-muted-foreground italic text-justify">{testimonial.comment}</blockquote>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </ScrollReveal>
               ))}
             </div>
             
