@@ -1,17 +1,34 @@
 import { google } from 'googleapis';
 
 // Khởi tạo Google Sheets API client
-// Ưu tiên dùng credentials từ env (client email + private key). Fallback sang keyFile.
+// Ưu tiên dùng credentials từ env (client email + private key). Fallback sang keyFile khi không hợp lệ.
 const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
 const rawPrivateKey = process.env.GOOGLE_PRIVATE_KEY;
 const normalizedPrivateKey = rawPrivateKey ? rawPrivateKey.replace(/\\n/g, '\n') : undefined;
 
+const isEnvCredsValid = Boolean(
+  clientEmail &&
+  normalizedPrivateKey &&
+  normalizedPrivateKey.includes('BEGIN PRIVATE KEY') &&
+  normalizedPrivateKey.includes('END PRIVATE KEY') &&
+  clientEmail.includes('@') &&
+  clientEmail.endsWith('.gserviceaccount.com')
+);
+
+if (clientEmail || rawPrivateKey) {
+  if (!isEnvCredsValid) {
+    console.warn('Env credentials detected but invalid. Falling back to keyFile.');
+  } else {
+    console.log('Using Google Sheets credentials from environment variables.');
+  }
+}
+
 const auth = new google.auth.GoogleAuth(
-  clientEmail && normalizedPrivateKey
+  isEnvCredsValid
     ? {
         credentials: {
-          client_email: clientEmail,
-          private_key: normalizedPrivateKey,
+          client_email: clientEmail as string,
+          private_key: normalizedPrivateKey as string,
         },
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       }
@@ -46,9 +63,9 @@ export async function appendApplicationToSheet(applicationData: ApplicationData)
     const spreadsheetId = process.env.GOOGLE_SHEET_ID;
     const range = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:J'; // A:J cho 10 cột (bao gồm thông tin ảnh)
 
-    if (!spreadsheetId || spreadsheetId === 'demo_sheet_id_replace_with_real_one') {
+    if (!spreadsheetId || spreadsheetId === 'demo_sheet_id_replace_with_real_one' || spreadsheetId === 'your_google_sheet_id_here') {
       console.warn('Google Sheets not configured properly. Data would be saved to:', applicationData);
-      return { success: true, message: 'Demo mode: Google Sheets integration not configured' };
+      return { success: false, message: 'Google Sheets chưa được cấu hình: thiếu GOOGLE_SHEET_ID' };
     }
 
     // Chuẩn bị dữ liệu để ghi vào sheet
@@ -63,7 +80,7 @@ export async function appendApplicationToSheet(applicationData: ApplicationData)
         applicationData.expectation,
         applicationData.situation,
         applicationData.department,
-        applicationData.portraitPhoto ? 'Có ảnh' : 'Không có ảnh', // Thông tin về ảnh
+        // applicationData.portraitPhoto ? 'Có ảnh' : 'Không có ảnh', // Thông tin về ảnh
       ]
     ];
 
@@ -91,9 +108,9 @@ export async function appendContactToSheet(contactData: ContactData) {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID;
     const range = process.env.GOOGLE_SHEET_RANGE_CONTACT || 'Contact!A:D'; // A:D cho 4 cột
 
-    if (!spreadsheetId || spreadsheetId === 'demo_sheet_id_replace_with_real_one') {
+    if (!spreadsheetId || spreadsheetId === 'demo_sheet_id_replace_with_real_one' || spreadsheetId === 'your_google_sheet_id_here') {
       console.warn('Google Sheets not configured properly. Data would be saved to:', contactData);
-      return { success: true, message: 'Demo mode: Google Sheets integration not configured' };
+      return { success: false, message: 'Google Sheets chưa được cấu hình: thiếu GOOGLE_SHEET_ID' };
     }
 
     // Chuẩn bị dữ liệu để ghi vào sheet

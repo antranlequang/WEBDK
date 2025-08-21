@@ -141,15 +141,21 @@ export async function submitApplication(
 
     // Ghi dữ liệu vào Google Sheet (có thể fail)
     let sheetUrl: string | undefined = undefined;
+    let sheetWriteOk = true;
     try {
       const result = await appendApplicationToSheet(applicationData);
       if (result?.sheetUrl) {
         sheetUrl = result.sheetUrl;
         console.log('Application saved to sheet:', sheetUrl);
       }
+      if (!result?.success) {
+        sheetWriteOk = false;
+        console.error('Google Sheet write failed:', result?.message);
+      }
     } catch (sheetError) {
       console.error("Error writing to Google Sheet:", sheetError);
       // Không fail form nếu Google Sheets fail
+      sheetWriteOk = false;
     }
 
     // Thử phân tích đơn ứng tuyển (có thể fail)
@@ -167,9 +173,12 @@ export async function submitApplication(
     }
 
     return { 
-      message: `Cảm ơn bạn ${applicationData.fullName}! Đơn ứng tuyển của bạn đã được gửi thành công.`,
+      message: sheetWriteOk
+        ? `Cảm ơn bạn ${applicationData.fullName}! Đơn ứng tuyển của bạn đã được gửi thành công.`
+        : `Đơn đã nhận nhưng chưa ghi được vào Google Sheets. Vui lòng kiểm tra cấu hình và thử lại.`,
       analysis: analysis,
       sheetUrl,
+      issues: sheetWriteOk ? undefined : ['Không thể ghi vào Google Sheets. Kiểm tra GOOGLE_SHEET_ID, quyền share, và credentials.'],
     };
 
   } catch (error) {
