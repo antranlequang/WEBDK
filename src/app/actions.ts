@@ -140,8 +140,13 @@ export async function submitApplication(
     const applicationData = validatedFields.data;
 
     // Ghi dữ liệu vào Google Sheet (có thể fail)
+    let sheetUrl: string | undefined = undefined;
     try {
-      await appendApplicationToSheet(applicationData);
+      const result = await appendApplicationToSheet(applicationData);
+      if (result?.sheetUrl) {
+        sheetUrl = result.sheetUrl;
+        console.log('Application saved to sheet:', sheetUrl);
+      }
     } catch (sheetError) {
       console.error("Error writing to Google Sheet:", sheetError);
       // Không fail form nếu Google Sheets fail
@@ -164,6 +169,7 @@ export async function submitApplication(
     return { 
       message: `Cảm ơn bạn ${applicationData.fullName}! Đơn ứng tuyển của bạn đã được gửi thành công.`,
       analysis: analysis,
+      sheetUrl,
     };
 
   } catch (error) {

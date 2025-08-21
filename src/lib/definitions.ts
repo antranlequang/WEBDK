@@ -55,4 +55,5 @@ export type ApplicationFormState = {
     issues?: string[];
     fields?: Record<string, string>;
     analysis?: string;
+    sheetUrl?: string;
 } | null;

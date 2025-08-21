@@ -1,10 +1,25 @@
 import { google } from 'googleapis';
 
 // Khởi tạo Google Sheets API client
-const auth = new google.auth.GoogleAuth({
-  keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE || './service-account-key.json',
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+// Ưu tiên dùng credentials từ env (client email + private key). Fallback sang keyFile.
+const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+const rawPrivateKey = process.env.GOOGLE_PRIVATE_KEY;
+const normalizedPrivateKey = rawPrivateKey ? rawPrivateKey.replace(/\\n/g, '\n') : undefined;
+
+const auth = new google.auth.GoogleAuth(
+  clientEmail && normalizedPrivateKey
+    ? {
+        credentials: {
+          client_email: clientEmail,
+          private_key: normalizedPrivateKey,
+        },
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      }
+    : {
+        keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE || './service-account-key.json',
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      }
+);
 
 const sheets = google.sheets({ version: 'v4', auth });
 
@@ -62,7 +77,8 @@ export async function appendApplicationToSheet(applicationData: ApplicationData)
     });
 
     console.log('Data appended successfully:', response.data);
-    return { success: true, message: 'Data written to Google Sheet successfully' };
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+    return { success: true, message: 'Data written to Google Sheet successfully', sheetUrl };
 
   } catch (error) {
     console.error('Error writing to Google Sheet:', error);
@@ -100,7 +116,8 @@ export async function appendContactToSheet(contactData: ContactData) {
     });
 
     console.log('Contact data appended successfully:', response.data);
-    return { success: true, message: 'Contact data written to Google Sheet successfully' };
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+    return { success: true, message: 'Contact data written to Google Sheet successfully', sheetUrl };
 
   } catch (error) {
     console.error('Error writing contact data to Google Sheet:', error);

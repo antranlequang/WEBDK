@@ -81,9 +81,12 @@ export function ApplicationForm() {
           variant: "destructive",
         });
       } else {
+        const description = state.sheetUrl
+          ? `${state.message} Xem sheet: ${state.sheetUrl}`
+          : state.message;
         toast({
           title: "Thành công!",
-          description: state.message,
+          description,
         });
         if (state.analysis) {
           form.reset();
